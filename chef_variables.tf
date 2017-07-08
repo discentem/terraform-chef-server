@@ -1,0 +1,10 @@
+variable chef_version {}
+variable chef_username {}
+variable chef_first_name {}
+variable chef_last_name {}
+variable chef_password {}
+variable chef_user_email {}
+variable chef_organization_id {}
+variable chef_organization_name {}
+variable git_username {}
+variable chef_repo_name {}

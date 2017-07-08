@@ -1,0 +1,10 @@
+stdout          true
+repo_url        'git@github:${git_username}/${chef_repo_name}.git'
+reponame        'cpe'
+cookbook_paths  ['cookbooks']
+role_path       'roles'
+databag_path    'data_bags'
+rev_checkpoint  'gd_revision'
+knife_config    '/root/.chef/knife.rb'
+knife_bin       '/opt/opscode/bin/knife'
+vcs_type        'git'

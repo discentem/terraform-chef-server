@@ -57,11 +57,8 @@ chef-manage-ctl reconfigure --accept-license
 /opt/opscode/embedded/bin/knife acl add group ${chef_organization_id}-validators containers nodes grant
 /opt/opscode/embedded/bin/knife acl add group ${chef_organization_id}-validators containers nodes delete
 
-#################################################
 # Setup grocery-delivery
-#################################################
 /opt/opscode/embedded/bin/gem install grocery_delivery
-
 
 #################################################
 # Finished Statement

@@ -60,6 +60,11 @@ data "template_file" "chef_bootstrap" {
 
 data "template_file" "gd-config" {
   template = "${file("data/gd-config.tpl")}"
+
+  vars {
+    git_username   = "${var.git_username}"
+    chef_repo_name = "${var.chef_repo_name}"
+  }
 }
 
 data "template_file" "id_rsa" {
@@ -74,7 +79,14 @@ resource "digitalocean_record" "chef_dns" {
   domain = "bkurtz.net"
   type   = "A"
   name   = "chef"
-  value  = "${scaleway_server.chef_server.public_ip}"
+  value  = "${scaleway_ip.server_ip.ip}"
+}
+
+resource "digitalocean_record" "chef_dns_2" {
+  domain = "bkurtz.io"
+  type   = "A"
+  name   = "chef"
+  value  = "${scaleway_ip.server_ip.ip}"
 }
 
 resource "scaleway_ip" "server_ip" {
@@ -121,7 +133,7 @@ resource "scaleway_server" "chef_server" {
       "cat <<FILE3 > /root/.ssh/id_rsa",
       "${data.template_file.id_rsa.rendered}",
       "FILE3",
-      "chmod 0600 /root/.ssh/id_rsa", 
+      "chmod 0600 /root/.ssh/id_rsa",
 
       "touch /etc/cron.d/gd",
       "cat <<FILE4 > /etc/cron.d/gd",

@@ -25,11 +25,6 @@ chef-server-ctl reconfigure
 chef-server-ctl user-create ${chef_username} ${chef_first_name} ${chef_last_name} ${chef_user_email} '${chef_password}' --filename /root/.chef/${chef_username}.pem
 chef-server-ctl org-create ${chef_organization_id} "${chef_organization_name}" --association_user ${chef_username} --filename /root/.chef/${chef_organization_id}-validator.pem
 
-# Add-ons
-chef-server-ctl install chef-manage
-chef-server-ctl reconfigure
-chef-manage-ctl reconfigure --accept-license
-
 #################################################
 # Chef validator ACL updates
 #################################################

@@ -8,10 +8,10 @@ provider "digitalocean" {
   token = "${var.do_token}"
 }
 
-data "scaleway_bootscript" "latest" {
+/*data "scaleway_bootscript" "latest" {
   architecture = "x86_64"
   name_filter  = "latest"
-}
+}*/
 
 data "scaleway_image" "ubuntu" {
   architecture = "x86_64"
@@ -63,7 +63,7 @@ data "template_file" "gd-config" {
 
   vars {
     git_username   = "${var.git_username}"
-    chef_repo_name = "${var.chef_repo_name}"
+    git_repo_name = "${var.git_repo_name}"
   }
 }
 
@@ -97,7 +97,7 @@ resource "scaleway_server" "chef_server" {
   name                = "${var.server_name}"
   image               = "${data.scaleway_image.ubuntu.id}"
   type                = "${var.server_type}"
-  bootscript          = "${data.scaleway_bootscript.latest.id}"
+  //bootscript          = "${data.scaleway_bootscript.latest.id}"
   security_group      = "${scaleway_security_group.default.id}"
   dynamic_ip_required = true
 

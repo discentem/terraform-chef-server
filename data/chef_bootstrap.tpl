@@ -48,14 +48,13 @@ chef-manage-ctl reconfigure --accept-license
 /opt/opscode/embedded/bin/knife acl add group ${chef_organization_id}-validators containers clients create
 /opt/opscode/embedded/bin/knife acl add group ${chef_organization_id}-validators containers clients update
 /opt/opscode/embedded/bin/knife acl add group ${chef_organization_id}-validators containers clients grant
-/opt/opscode/embedded/bin/knife acl add group ${chef_organization_id}-validators containers clients delete
 
 # Add nodes permission for newly created validator group
 /opt/opscode/embedded/bin/knife acl add group ${chef_organization_id}-validators containers nodes read
 /opt/opscode/embedded/bin/knife acl add group ${chef_organization_id}-validators containers nodes create
 /opt/opscode/embedded/bin/knife acl add group ${chef_organization_id}-validators containers nodes update
 /opt/opscode/embedded/bin/knife acl add group ${chef_organization_id}-validators containers nodes grant
-/opt/opscode/embedded/bin/knife acl add group ${chef_organization_id}-validators containers nodes delete
+
 
 # Setup grocery-delivery
 /opt/opscode/embedded/bin/gem install grocery_delivery

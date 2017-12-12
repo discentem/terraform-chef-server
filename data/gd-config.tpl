@@ -1,5 +1,5 @@
 stdout          true
-repo_url        'git@github.com:${git_username}/${chef_repo_name}.git'
+repo_url        'git@github.com:${git_username}/${git_repo_name}.git'
 reponame        'cpe'
 cookbook_paths  ['cookbooks']
 role_path       'roles'

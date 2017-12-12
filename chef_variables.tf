@@ -7,4 +7,4 @@ variable chef_user_email {}
 variable chef_organization_id {}
 variable chef_organization_name {}
 variable git_username {}
-variable chef_repo_name {}
+variable git_repo_name {}

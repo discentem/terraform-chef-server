@@ -1,17 +1,14 @@
+//Setup for Scaleway resources
 provider "scaleway" {
   organization = "${var.access_key}"
   token        = "${var.token}"
   region       = "${var.region}"
 }
 
+//Set up for Digitalocean resources
 provider "digitalocean" {
   token = "${var.do_token}"
 }
-
-/*data "scaleway_bootscript" "latest" {
-  architecture = "x86_64"
-  name_filter  = "latest"
-}*/
 
 data "scaleway_image" "ubuntu" {
   architecture = "x86_64"
@@ -76,14 +73,7 @@ data "template_file" "cron_gd" {
 }
 
 resource "digitalocean_record" "chef_dns" {
-  domain = "bkurtz.net"
-  type   = "A"
-  name   = "chef"
-  value  = "${scaleway_ip.server_ip.ip}"
-}
-
-resource "digitalocean_record" "chef_dns_2" {
-  domain = "bkurtz.io"
+  domain = "${var.dns_record}"
   type   = "A"
   name   = "chef"
   value  = "${scaleway_ip.server_ip.ip}"

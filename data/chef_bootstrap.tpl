@@ -6,12 +6,13 @@ chown root:root /etc/gd-config.rb
 chmod 0755 /etc/cron.d/gd
 echo "Set up knife.rb, gd-config.rb, /etc/cron.d/gd"
 
+apt-get update -y
+apt-get install git -y
+
 #################################################
 # Install chef server
 #################################################
-apt-get update -y
-apt-get upgrade -y
-apt-get install git -y
+
 wget -O /tmp/chef-server-core_${chef_version}_amd64.deb https://packages.chef.io/stable/ubuntu/14.04/chef-server-core_${chef_version}-1_amd64.deb
 dpkg -i /tmp/chef-server-core_${chef_version}_amd64.deb
 apt-get install -y cmake pkg-config  # Needed for grocery-delivery

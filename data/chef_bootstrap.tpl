@@ -1,10 +1,11 @@
 #!/bin/bash
 
 set -e
+echo "Setting up knife.rb, gd-config.rb, /etc/cron.d/gd"
 chown root:root /root/.chef/knife.rb
 chown root:root /etc/gd-config.rb
 chmod 0755 /etc/cron.d/gd
-echo "Set up knife.rb, gd-config.rb, /etc/cron.d/gd"
+
 
 apt-get update -y
 apt-get install git -y
@@ -54,6 +55,10 @@ chef-server-ctl org-create ${chef_organization_id} "${chef_organization_name}" -
 
 # Setup grocery-delivery
 /opt/opscode/embedded/bin/gem install grocery_delivery
+
+git clone https://github.com/letsencrypt/letsencrypt
+chef-server-ctl stop
+./letsencrypt/letsencrypt-auto certonly --standalone --email ${chef_user_email} -d ${chef_fqdn} --agree-tos -n
 
 #################################################
 # Finished Statement

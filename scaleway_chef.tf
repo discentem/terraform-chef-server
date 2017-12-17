@@ -1,4 +1,4 @@
-//Setup for Scaleway resources
+//Set up for Scaleway resources
 provider "scaleway" {
   organization = "${var.access_key}"
   token        = "${var.token}"
@@ -10,16 +10,20 @@ provider "digitalocean" {
   token = "${var.do_token}"
 }
 
+//OS Image resource for Scaleway
 data "scaleway_image" "ubuntu" {
   architecture = "x86_64"
   name         = "${var.image}"
 }
 
+//Security policy for Scaleway servers
 resource "scaleway_security_group" "default" {
   name        = "ssh_security_group"
   description = "Allow SSH traffic"
 }
 
+//Allowing ssh from the internet. Though later we are dropping an ssh key so...
+// this should be ok.
 resource "scaleway_security_group_rule" "ssh_accept" {
   security_group = "${scaleway_security_group.default.id}"
 
@@ -30,6 +34,8 @@ resource "scaleway_security_group_rule" "ssh_accept" {
   port      = 22
 }
 
+//Templating knife.rb file. For grocery-delivery, this config lives on the
+// Chef server.
 data "template_file" "knife_config" {
   template = "${file("data/knife.tpl")}"
 
@@ -40,10 +46,22 @@ data "template_file" "knife_config" {
   }
 }
 
+resource "digitalocean_record" "chef_dns" {
+  domain = "${var.dns_record}"
+  type   = "A"
+  name   = "chef"
+  value  = "${scaleway_ip.server_ip.ip}"
+}
+
+resource "scaleway_ip" "server_ip" {
+  server = "${scaleway_server.chef_server.id}"
+}
+
 data "template_file" "chef_bootstrap" {
   template = "${file("data/chef_bootstrap.tpl")}"
 
   vars {
+    chef_fqdn              = "chef.${var.dns_record}"
     chef_username          = "${var.chef_username}"
     chef_first_name        = "${var.chef_first_name}"
     chef_last_name         = "${var.chef_last_name}"
@@ -52,6 +70,13 @@ data "template_file" "chef_bootstrap" {
     chef_organization_id   = "${var.chef_organization_id}"
     chef_organization_name = "${var.chef_organization_name}"
     chef_version           = "${var.chef_version}"
+  }
+}
+
+data "template_file" "chef_nginx" {
+  template = "${file("data/chef_server.rb.tpl")}"
+  vars {
+    chef_fqdn              = "chef.${var.dns_record}"
   }
 }
 
@@ -70,17 +95,6 @@ data "template_file" "id_rsa" {
 
 data "template_file" "cron_gd" {
   template = "${file("data/cron_gd")}"
-}
-
-resource "digitalocean_record" "chef_dns" {
-  domain = "${var.dns_record}"
-  type   = "A"
-  name   = "chef"
-  value  = "${scaleway_ip.server_ip.ip}"
-}
-
-resource "scaleway_ip" "server_ip" {
-  server = "${scaleway_server.chef_server.id}"
 }
 
 resource "scaleway_server" "chef_server" {
@@ -130,7 +144,7 @@ resource "scaleway_server" "chef_server" {
       "${data.template_file.cron_gd.rendered}",
       "FILE4",
 
-      "echo '127.0.0.1 chef chef.bkurtz.net' >> /etc/hosts",
+      "echo '127.0.0.1 chef ${var.dns_record}' >> /etc/hosts",
 
       "touch /tmp/bootstrap-chef-server.sh",
       "cat <<FILE5 > /tmp/bootstrap-chef-server.sh",
@@ -138,7 +152,14 @@ resource "scaleway_server" "chef_server" {
       "FILE5",
 
       "chmod +x /tmp/bootstrap-chef-server.sh",
-      "sudo sh /tmp/bootstrap-chef-server.sh"
+      "sudo sh /tmp/bootstrap-chef-server.sh",
+
+      "touch /etc/opscode/chef-server.rb",
+      "cat <<FILE6 > /etc/opscode/chef-server.rb",
+      "${data.template_file.chef_nginx.rendered}",
+      "FILE6",
+
+      "chef-server-ctl reconfigure"
     ]
   }
 }

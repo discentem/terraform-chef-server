@@ -46,13 +46,6 @@ data "template_file" "knife_config" {
   }
 }
 
-resource "digitalocean_record" "chef_dns" {
-  domain = "${var.dns_record}"
-  type   = "A"
-  name   = "chef"
-  value  = "${scaleway_ip.server_ip.ip}"
-}
-
 resource "scaleway_ip" "server_ip" {
   server = "${scaleway_server.chef_server.id}"
 }
@@ -73,7 +66,7 @@ data "template_file" "chef_bootstrap" {
   }
 }
 
-data "template_file" "chef_nginx" {
+data "template_file" "chef_server_config" {
   template = "${file("data/chef_server.rb.tpl")}"
   vars {
     chef_fqdn              = "chef.${var.dns_record}"
@@ -101,7 +94,6 @@ resource "scaleway_server" "chef_server" {
   name                = "${var.server_name}"
   image               = "${data.scaleway_image.ubuntu.id}"
   type                = "${var.server_type}"
-  //bootscript          = "${data.scaleway_bootscript.latest.id}"
   security_group      = "${scaleway_security_group.default.id}"
   dynamic_ip_required = true
 
@@ -156,13 +148,19 @@ resource "scaleway_server" "chef_server" {
 
       "touch /etc/opscode/chef-server.rb",
       "cat <<FILE6 > /etc/opscode/chef-server.rb",
-      "${data.template_file.chef_nginx.rendered}",
+      "${data.template_file.chef_server_config.rendered}",
       "FILE6",
-
-      "chef-server-ctl reconfigure"
     ]
   }
 }
+
+resource "digitalocean_record" "chef_dns" {
+  domain = "${var.dns_record}"
+  type   = "A"
+  name   = "chef"
+  value  = "${scaleway_ip.server_ip.ip}"
+}
+
 
 output "hostname" {
   value = "${var.server_name}"

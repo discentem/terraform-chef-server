@@ -12,7 +12,7 @@ provider "digitalocean" {
 
 //OS Image resource for Scaleway
 data "scaleway_image" "ubuntu" {
-  architecture = "x86_64"
+  architecture = "${var.image_architecture}"
   name         = "${var.image}"
 }
 
@@ -146,10 +146,7 @@ resource "scaleway_server" "chef_server" {
       "chmod +x /tmp/bootstrap-chef-server.sh",
       "sudo sh /tmp/bootstrap-chef-server.sh",
 
-      "touch /etc/opscode/chef-server.rb",
-      "cat <<FILE6 > /etc/opscode/chef-server.rb",
-      "${data.template_file.chef_server_config.rendered}",
-      "FILE6",
+      
     ]
   }
 }

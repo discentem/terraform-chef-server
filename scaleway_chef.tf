@@ -159,6 +159,35 @@ resource "digitalocean_record" "chef_dns" {
   value  = "${scaleway_ip.server_ip.ip}"
 }
 
+resource "null_resource" "letsencrypt" {
+
+  depends_on = ["scaleway_server.chef_server", "digitalocean_record.chef_dns"]
+
+  provisioner "remote-exec" {
+
+    connection {
+      host        = "${scaleway_server.chef_server.public_ip}"
+      private_key = "${file("~/.ssh/id_rsa")}"
+      timeout     = "50s"
+    }
+
+    inline = [
+      "cat <<FILE7 > /etc/opscode/chef-server.rb",
+      "${data.template_file.chef_server_config.rendered}",
+      "FILE7",
+      "chef-server-ctl stop",
+
+      "touch /tmp/letsencrypt.sh",
+      "cat <<FILE6 > /tmp/letsencrypt.sh",
+      "${data.template_file.letsencrypt.rendered}",
+      "FILE6",
+      "chmod +x /tmp/letsencrypt.sh",
+      "sh /tmp/letsencrypt.sh",
+      "chef-server-ctl reconfigure"
+    ]
+  }
+}
+
 
 output "hostname" {
   value = "${var.server_name}"

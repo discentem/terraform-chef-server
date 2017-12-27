@@ -99,8 +99,8 @@ resource "scaleway_server" "chef_server" {
   dynamic_ip_required = true
 
   volume {
-   size_in_gb = 50
-   type       = "l_ssd"
+    size_in_gb = 150
+    type       = "l_ssd"
   }
 
   provisioner "remote-exec" {

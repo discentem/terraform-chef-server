@@ -146,17 +146,14 @@ resource "scaleway_server" "chef_server" {
       "${data.template_file.cron_gd.rendered}",
       "FILE4",
 
-      "echo '127.0.0.1 chef ${var.dns_record}' >> /etc/hosts",
+      "echo '127.0.0.1 chef ${var.chef_dns_prefix}.${var.dns_record}' >> /etc/hosts",
 
       "touch /tmp/bootstrap-chef-server.sh",
       "cat <<FILE5 > /tmp/bootstrap-chef-server.sh",
       "${data.template_file.chef_bootstrap.rendered}",
       "FILE5",
-
       "chmod +x /tmp/bootstrap-chef-server.sh",
-      "sudo sh /tmp/bootstrap-chef-server.sh",
-
-
+      "sh /tmp/bootstrap-chef-server.sh",
     ]
   }
 }
@@ -164,7 +161,7 @@ resource "scaleway_server" "chef_server" {
 resource "digitalocean_record" "chef_dns" {
   domain = "${var.dns_record}"
   type   = "A"
-  name   = "chef"
+  name   = "${var.chef_dns_prefix}"
   value  = "${scaleway_ip.server_ip.ip}"
 }
 

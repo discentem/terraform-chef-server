@@ -54,6 +54,7 @@ data "template_file" "chef_bootstrap" {
   template = "${file("data/chef_bootstrap.tpl")}"
 
   vars {
+    os_version              = "${var.os_version}"
     chef_fqdn              = "chef.${var.dns_record}"
     chef_username          = "${var.chef_username}"
     chef_first_name        = "${var.chef_first_name}"
@@ -146,7 +147,7 @@ resource "scaleway_server" "chef_server" {
       "chmod +x /tmp/bootstrap-chef-server.sh",
       "sudo sh /tmp/bootstrap-chef-server.sh",
 
-      
+
     ]
   }
 }

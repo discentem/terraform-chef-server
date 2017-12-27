@@ -57,7 +57,7 @@ chef-server-ctl org-create ${chef_organization_id} "${chef_organization_name}" -
 /opt/opscode/embedded/bin/gem install grocery_delivery
 
 git clone https://github.com/letsencrypt/letsencrypt
-./letsencrypt/letsencrypt-auto certonly --standalone --email ${chef_user_email} -d ${chef_fqdn} --agree-tos -n
+#./letsencrypt/letsencrypt-auto certonly --standalone --email ${chef_user_email} -d ${chef_fqdn} --agree-tos -n
 
 #################################################
 # Finished Statement

@@ -91,6 +91,15 @@ data "template_file" "cron_gd" {
   template = "${file("data/cron_gd")}"
 }
 
+data "template_file" "letsencrypt" {
+  template = "${file("data/letsencrypt.tpl")}"
+
+  vars {
+    chef_user_email   = "${var.chef_user_email}"
+    chef_fqdn         = "${var.chef_dns_prefix}.${var.dns_record}"
+  }
+}
+
 resource "scaleway_server" "chef_server" {
   name                = "${var.server_name}"
   image               = "${data.scaleway_image.ubuntu.id}"

@@ -1,3 +1,4 @@
+variable chef_dns_prefix {}
 variable chef_version {}
 variable chef_username {}
 variable chef_first_name {}

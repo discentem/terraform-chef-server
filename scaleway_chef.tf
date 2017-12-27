@@ -42,7 +42,7 @@ data "template_file" "knife_config" {
   vars {
     chef_organization_id = "${var.chef_organization_id}"
     chef_username        = "${var.chef_username}"
-    dns_record           = "${var.dns_record}"
+    dns_record           = "${var.chef_dns_prefix}.${var.dns_record}"
   }
 }
 
@@ -54,8 +54,8 @@ data "template_file" "chef_bootstrap" {
   template = "${file("data/chef_bootstrap.tpl")}"
 
   vars {
-    os_version              = "${var.os_version}"
-    chef_fqdn              = "chef.${var.dns_record}"
+    os_version             = "${var.os_version}"
+    chef_fqdn              = "${var.chef_dns_prefix}.${var.dns_record}"
     chef_username          = "${var.chef_username}"
     chef_first_name        = "${var.chef_first_name}"
     chef_last_name         = "${var.chef_last_name}"
@@ -70,7 +70,7 @@ data "template_file" "chef_bootstrap" {
 data "template_file" "chef_server_config" {
   template = "${file("data/chef_server.rb.tpl")}"
   vars {
-    chef_fqdn              = "chef.${var.dns_record}"
+    chef_fqdn     = "${var.chef_dns_prefix}.${var.dns_record}"
   }
 }
 
@@ -78,7 +78,7 @@ data "template_file" "gd-config" {
   template = "${file("data/gd-config.tpl")}"
 
   vars {
-    git_username   = "${var.git_username}"
+    git_username  = "${var.git_username}"
     git_repo_name = "${var.git_repo_name}"
   }
 }

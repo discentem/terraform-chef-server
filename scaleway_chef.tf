@@ -178,15 +178,15 @@ resource "null_resource" "letsencrypt" {
     }
 
     inline = [
-      "cat <<FILE7 > /etc/opscode/chef-server.rb",
+      "cat <<FILE6 > /etc/opscode/chef-server.rb",
       "${data.template_file.chef_server_config.rendered}",
-      "FILE7",
+      "FILE6",
       "chef-server-ctl stop",
 
       "touch /tmp/letsencrypt.sh",
-      "cat <<FILE6 > /tmp/letsencrypt.sh",
+      "cat <<FILE7 > /tmp/letsencrypt.sh",
       "${data.template_file.letsencrypt.rendered}",
-      "FILE6",
+      "FILE7",
       "chmod +x /tmp/letsencrypt.sh",
       "sh /tmp/letsencrypt.sh",
       "chef-server-ctl reconfigure"

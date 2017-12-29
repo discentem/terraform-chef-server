@@ -1,8 +1,8 @@
 //Set up for Scaleway resources
 provider "scaleway" {
-  organization = "${var.access_key}"
-  token        = "${var.token}"
-  region       = "${var.region}"
+  organization = "${var.sw_access_key}"
+  token        = "${var.sw_token}"
+  region       = "${var.sw_region}"
 }
 
 //Set up for Digitalocean resources
@@ -12,8 +12,8 @@ provider "digitalocean" {
 
 //OS Image resource for Scaleway
 data "scaleway_image" "ubuntu" {
-  architecture = "${var.image_architecture}"
-  name         = "${var.image}"
+  architecture = "${var.sw_image_architecture}"
+  name         = "${var.sw_image}"
 }
 
 //Security policy for Scaleway servers
@@ -54,7 +54,7 @@ data "template_file" "chef_bootstrap" {
   template = "${file("data/chef_bootstrap.tpl")}"
 
   vars {
-    os_version             = "${var.os_version}"
+    os_version             = "${var.sw_os_version}"
     chef_fqdn              = "${var.chef_dns_prefix}.${var.dns_record}"
     chef_username          = "${var.chef_username}"
     chef_first_name        = "${var.chef_first_name}"
@@ -101,9 +101,9 @@ data "template_file" "letsencrypt" {
 }
 
 resource "scaleway_server" "chef_server" {
-  name                = "${var.server_name}"
+  name                = "${var.sw_server_name}"
   image               = "${data.scaleway_image.ubuntu.id}"
-  type                = "${var.server_type}"
+  type                = "${var.sw_server_type}"
   security_group      = "${scaleway_security_group.default.id}"
   dynamic_ip_required = true
 
@@ -196,7 +196,7 @@ resource "null_resource" "letsencrypt" {
 
 
 output "hostname" {
-  value = "${var.server_name}"
+  value = "${var.sw_server_name}"
 }
 
 output "public_ip" {

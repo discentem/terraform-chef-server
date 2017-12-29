@@ -62,6 +62,7 @@ resource "digitalocean_ssh_key" "default" {
 }
 
 resource "digitalocean_droplet" "chef_server" {
+  ssh_keys            = ["${digitalocean_ssh_key.default.id}"]
   name                = "${var.do_droplet_name}"
   region              = "${var.do_region}"
   image               = "${var.do_image}"

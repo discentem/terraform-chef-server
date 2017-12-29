@@ -1,6 +1,6 @@
 *.tfstate
 *.tfstate.backup
-*.tfvars
+secrets.tfvars
 *.lock.info
 .terraform
 .DS_store

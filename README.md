@@ -1,5 +1,6 @@
-Automated building of [Chef-Server](https://docs.chef.io/install_server.html) with [Grocery Delivery](https://github.com/facebook/grocery-delivery) via Terraform. Includes Lets Encrypt cert.
+Automated building of [Chef-Server](https://docs.chef.io/install_server.html) with [Grocery Delivery](https://github.com/facebook/grocery-delivery) via Terraform.
+This also grabs a Lets Encrypt cert for the Chef server and configures it.
 
-In it's current form, this project builds the sever on Scaleway and the DNS records on Digital Ocean; though it is easily modified to build on other Cloud Platforms supported by Terraform.
+In it's current form, this project builds the sever and DNS on Digital Ocean; however, it is easily modified to build on any other Cloud Platform supported by Terraform. The provisioning bits (templates + (remote-exec -> bash)) are cloud agnostic.
 
-Blog post coming soon.
+A blog post on how to use this is coming soon.

@@ -112,40 +112,40 @@ resource "digitalocean_droplet" "chef_server" {
   }
 }
 
-# resource "digitalocean_record" "chef_dns" {
-#   domain = "${var.dns_record}"
-#   type   = "A"
-#   name   = "${var.chef_dns_prefix}"
-#   value  = "${digitalocean_droplet.chef_server.ipv4_address}"
-# }
-#
-# resource "null_resource" "letsencrypt" {
-#
-#   depends_on = [
-#                 "digitalocean_droplet.chef_server",
-#                 "digitalocean_record.chef_dns"
-#                ]
-#
-#   provisioner "remote-exec" {
-#
-#     connection {
-#       host        = "${digitalocean_droplet.chef_server.ipv4_address}"
-#       private_key = "${file("~/.ssh/id_rsa")}"
-#       timeout     = "50s"
-#     }
-#
-#     inline = [
-#       "chef-server-ctl stop",
-#       "cat <<FILE6 > /etc/opscode/chef-server.rb",
-#       "${data.template_file.chef_server_config.rendered}",
-#       "FILE6",
-#
-#       "git clone https://github.com/certbot/certbot",
-#       "./letsencrypt/letsencrypt-auto certonly --standalone --email ${var.chef_user_email} -d ${var.chef_dns_prefix}.${var.dns_record} --agree-tos -n",
-#       "chef-server-ctl reconfigure"
-#     ]
-#   }
-# }
+resource "digitalocean_record" "chef_dns" {
+  domain = "${var.dns_record}"
+  type   = "A"
+  name   = "${var.chef_dns_prefix}"
+  value  = "${digitalocean_droplet.chef_server.ipv4_address}"
+}
+
+resource "null_resource" "letsencrypt" {
+
+  depends_on = [
+                "digitalocean_droplet.chef_server",
+                "digitalocean_record.chef_dns"
+               ]
+
+  provisioner "remote-exec" {
+
+    connection {
+      host        = "${digitalocean_droplet.chef_server.ipv4_address}"
+      private_key = "${file("~/.ssh/id_rsa")}"
+      timeout     = "50s"
+    }
+
+    inline = [
+      "chef-server-ctl stop",
+      "cat <<FILE6 > /etc/opscode/chef-server.rb",
+      "${data.template_file.chef_server_config.rendered}",
+      "FILE6",
+
+      "git clone https://github.com/certbot/certbot",
+      "./letsencrypt/letsencrypt-auto certonly --standalone --email ${var.chef_user_email} -d ${var.chef_dns_prefix}.${var.dns_record} --agree-tos -n",
+      "chef-server-ctl reconfigure"
+    ]
+  }
+}
 
 output "hostname" {
   value = "${var.do_droplet_name}"

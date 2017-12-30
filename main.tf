@@ -141,7 +141,7 @@ resource "null_resource" "letsencrypt" {
       "FILE6",
 
       "git clone https://github.com/certbot/certbot",
-      "./letsencrypt/letsencrypt-auto certonly --standalone --email ${var.chef_user_email} -d ${var.chef_dns_prefix}.${var.dns_record} --agree-tos -n",
+      "./certbot/letsencrypt-auto certonly --standalone --email ${var.chef_user_email} -d ${var.chef_dns_prefix}.${var.dns_record} --agree-tos -n",
       "chef-server-ctl reconfigure"
     ]
   }

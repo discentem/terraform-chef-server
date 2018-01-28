@@ -5,6 +5,9 @@ This also grabs a Lets Encrypt cert for the Chef server and configures it.
 
 This project currently builds the sever and DNS on Digital Ocean; however, it is easily modified to build on any other Cloud Platform supported by Terraform. The provisioning bits are mostly cloud agnostic.
 
+## Credits
+I borrowed large parts of the code in the project from [Clayton Burlison](https://clburlison.com/) and [The Startup Stack](https://github.com/the-startup-stack/stack-cookbooks/tree/master/terraform). Huge thanks to them.
+
 ## Basic usage:
 
 Run `terraform apply -var-file=variable_values.tfvars -var-file=secrets.tfvars` where `secrets.tfvars` is a file created you by (it's already in the .gitignore). `secrets.tfvars` would look something like this:

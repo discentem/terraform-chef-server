@@ -13,7 +13,8 @@ Run `terraform apply -var-file=variable_values.tfvars -var-file=secrets.tfvars` 
 dns_record = "<main dns record here>"
 
 # i.e. website.org not chef.website.org.
-# https://github.com/discentem/terraform-chef-server/blob/digital_ocean/main.tf#L116    # assumes the top level DNS record is already set up in Digital Ocean. We are just    
+# https://github.com/discentem/terraform-chef-server/blob/digital_ocean/main.tf#L116   
+# assumes the top level DNS record is already set up in Digital Ocean. We are just    
 # referencing here so that we can create chef.website.org.
 
 do_token = "<digital ocean API token here>"

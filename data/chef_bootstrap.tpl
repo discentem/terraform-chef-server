@@ -7,7 +7,8 @@ chown root:root /etc/gd-config.rb
 chmod 0755 /etc/cron.d/gd
 
 
-apt-get update -y
+apt-get update
+
 apt-get install git -y
 
 #################################################

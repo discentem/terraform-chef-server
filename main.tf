@@ -142,7 +142,7 @@ resource "null_resource" "letsencrypt" {
 
       "git clone https://github.com/certbot/certbot",
       "./certbot/letsencrypt-auto certonly --standalone --email ${var.chef_user_email} -d ${var.chef_dns_prefix}.${var.dns_record} --agree-tos -n",
-      "chef-server-ctl reconfigure"
+      "chef-server-ctl restart"
     ]
   }
 }

@@ -5,6 +5,7 @@
 
 log_level               :info
 log_location            STDOUT
+ssl_verify_mode         ${ssl_verify_mode}
 node_name               "${chef_username}"
 client_key              "${chef_username}.pem"
 validation_client_name  "${chef_organization_id}-validator"

@@ -9,6 +9,7 @@ data "template_file" "knife_config" {
   template = "${file("data/knife.tpl")}"
 
   vars {
+    ssl_verify_mode      = ":verify_none"
     chef_organization_id = "${var.chef_organization_id}"
     chef_username        = "${var.chef_username}"
     dns_record           = "${var.chef_dns_prefix}.${var.dns_record}"
@@ -142,8 +143,25 @@ resource "null_resource" "letsencrypt" {
 
       "git clone https://github.com/certbot/certbot",
       "./certbot/letsencrypt-auto certonly --standalone --email ${var.chef_user_email} -d ${var.chef_dns_prefix}.${var.dns_record} --agree-tos -n",
+      "chef-server-ctl reconfigure",
       "chef-server-ctl restart"
     ]
+  }
+
+
+}
+
+data "template_file" "knife_config_ssl" {
+
+  depends_on = ["null_resource.letsencrypt"]
+
+  template = "${file("data/knife.tpl")}"
+
+  vars {
+    ssl_verify_mode      = ":verify_peer"
+    chef_organization_id = "${var.chef_organization_id}"
+    chef_username        = "${var.chef_username}"
+    dns_record           = "${var.chef_dns_prefix}.${var.dns_record}"
   }
 }
 

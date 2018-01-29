@@ -17,7 +17,8 @@ apt-get install git -y
 
 wget -O /tmp/chef-server-core_${chef_version}_amd64.deb https://packages.chef.io/files/stable/chef-server/${chef_version}/ubuntu/${os_version}/chef-server-core_${chef_version}-1_amd64.deb
 dpkg -i /tmp/chef-server-core_${chef_version}_amd64.deb
-apt-get install -y cmake pkg-config  # Needed for grocery-delivery
+apt-get install cmake -y
+apt-get install pkg-config -y
 service cron restart  # restart cron to load the gd job
 
 #################################################
@@ -56,6 +57,10 @@ chef-server-ctl org-create ${chef_organization_id} "${chef_organization_name}" -
 
 # Setup grocery-delivery
 /opt/opscode/embedded/bin/gem install grocery_delivery
+
+# SSH check with Github
+
+
 
 #################################################
 # Finished Statement

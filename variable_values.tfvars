@@ -8,4 +8,4 @@ do_region       = "nyc3"
 
 # See https://github.com/terraform-providers/terraform-provider-digitalocean/issues/60
 # for size definitions.
-do_size         = "s-1vcpu-3gb"
+do_size         = "s-2vcpu-4gb"
